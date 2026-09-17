@@ -25,8 +25,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.exposuretrackingsystem.app.data.model.SensorSampleType
+import com.exposuretrackingsystem.app.data.model.TransportType
 import com.exposuretrackingsystem.app.location.LocationTrackingManager
 import com.exposuretrackingsystem.app.location.RouteEngine
+import com.exposuretrackingsystem.app.sensors.SensorDataManager
+import com.exposuretrackingsystem.app.sensors.SensorDiagnosticLogger
 import java.io.File
 import kotlinx.coroutines.delay
 
@@ -35,12 +39,24 @@ fun ContentView() {
     val context = LocalContext.current
     val locationTrackingManager = remember { LocationTrackingManager(context) }
     val routeEngine = remember { RouteEngine(locationTrackingManager) }
+    val sensorDataManager = remember { SensorDataManager(context) }
+    val sensorDiagnosticLogger = remember { SensorDiagnosticLogger(context) }
 
     var isTracking by remember { mutableStateOf(false) }
     var permissionRequestPending by remember { mutableStateOf(false) }
     var durationSeconds by remember { mutableStateOf(0.0) }
     var distanceMeters by remember { mutableStateOf(0.0) }
     var averageSpeedKmh by remember { mutableStateOf(0.0) }
+    var sensorSampleCounts by remember { mutableStateOf(sensorDataManager.sampleCountsSnapshot()) }
+
+    fun startTrackingSession(): Boolean {
+        val trackingStarted = routeEngine.startTracking(TransportType.WALK)
+        if (trackingStarted) {
+            sensorDataManager.clearSamples()
+            sensorDataManager.start()
+        }
+        return trackingStarted
+    }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -50,7 +66,7 @@ fun ContentView() {
         val permissionGranted = fineGranted || coarseGranted
 
         if (permissionRequestPending && permissionGranted) {
-            isTracking = routeEngine.startTracking()
+            isTracking = startTrackingSession()
         }
         permissionRequestPending = false
     }
@@ -61,10 +77,20 @@ fun ContentView() {
         }
     }
 
+    DisposableEffect(sensorDataManager, sensorDiagnosticLogger) {
+        sensorDataManager.onSample = sensorDiagnosticLogger::logSample
+        onDispose {
+            sensorDataManager.onSample = null
+            sensorDataManager.stop()
+        }
+    }
+
     LaunchedEffect(isTracking) {
         while (isTracking) {
             val route = routeEngine.activeRoute
             if (route == null) {
+                sensorDataManager.stop()
+                sensorSampleCounts = sensorDataManager.sampleCountsSnapshot()
                 isTracking = false
                 break
             }
@@ -72,6 +98,7 @@ fun ContentView() {
             durationSeconds = route.totalDurationSeconds
             distanceMeters = route.totalDistanceMeters
             averageSpeedKmh = route.averageSpeedKmh
+            sensorSampleCounts = sensorDataManager.sampleCountsSnapshot()
             delay(METRICS_REFRESH_MILLIS)
         }
     }
@@ -82,7 +109,7 @@ fun ContentView() {
         }
 
         if (locationTrackingManager.hasLocationPermission()) {
-            isTracking = routeEngine.startTracking()
+            isTracking = startTrackingSession()
         } else {
             permissionRequestPending = true
             permissionLauncher.launch(LocationTrackingManager.LOCATION_PERMISSIONS)
@@ -94,6 +121,8 @@ fun ContentView() {
             return
         }
 
+        sensorDataManager.stop()
+        sensorSampleCounts = sensorDataManager.sampleCountsSnapshot()
         val finalizedRoute = routeEngine.stopTracking()
         durationSeconds = finalizedRoute?.totalDurationSeconds ?: durationSeconds
         distanceMeters = finalizedRoute?.totalDistanceMeters ?: distanceMeters
@@ -131,6 +160,14 @@ fun ContentView() {
         Text(text = "Duration: ${"%.1f".format(durationSeconds)} s")
         Text(text = "Distance: ${"%.1f".format(distanceMeters)} m")
         Text(text = "Average speed: ${"%.1f".format(averageSpeedKmh)} km/h")
+        Text(
+            text = "Sensors available: ${sensorDataManager.availableSensorTypes.joinToString { it.name }}"
+        )
+        Text(
+            text = "Sensor samples: ${SensorSampleType.values().joinToString { sampleType ->
+                "${sampleType.name}=${sensorSampleCounts[sampleType] ?: 0}"
+            }}"
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),

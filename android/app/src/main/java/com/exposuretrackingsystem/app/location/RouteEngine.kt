@@ -4,6 +4,7 @@ import android.location.Location
 import com.exposuretrackingsystem.app.data.model.LocationPoint
 import com.exposuretrackingsystem.app.data.model.Route
 import com.exposuretrackingsystem.app.data.model.RouteSegment
+import com.exposuretrackingsystem.app.data.model.TransportType
 
 class RouteEngine(
     private val locationTrackingManager: LocationTrackingManager,
@@ -26,12 +27,15 @@ class RouteEngine(
         }
     }
 
-    fun startTracking(): Boolean {
+    fun startTracking(transportType: TransportType = TransportType.WALK): Boolean {
         if (activeRoute != null) {
             return false
         }
 
-        val route = Route(startedAtMillis = System.currentTimeMillis())
+        val route = Route(
+            startedAtMillis = System.currentTimeMillis(),
+            transportType = transportType
+        )
         activeRoute = route
         acceptedPointCount = 0
         rejectedPointCount = 0

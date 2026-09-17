@@ -20,13 +20,28 @@ enum class ActivityLevel {
 enum class TransportType {
     WALK,
     RUN,
-    BIKE,
+    BICYCLE,
+    E_BIKE,
+    SCOOTER,
+    E_SCOOTER,
+    SKATEBOARD,
+    ROLLER_SKATES,
+    WHEELCHAIR,
+
+    MOTORCYCLE,
     CAR,
+    TAXI,
+
     BUS,
+    TROLLEYBUS,
     TRAIN,
     TRAM,
     METRO,
-    MOTORCYCLE,
-    UNKNOWN,
-    STATIONARY
+    FERRY,
+    AIRPLANE,
+
+    CABLE_CAR,
+    BOAT,
+
+    OTHER
 }

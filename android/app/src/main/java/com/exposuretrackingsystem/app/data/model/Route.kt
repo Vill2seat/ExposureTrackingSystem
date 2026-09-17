@@ -3,6 +3,7 @@ package com.exposuretrackingsystem.app.data.model
 data class Route(
     val id: Long = ModelIdGenerator.next(),
     val startedAtMillis: Long,
+    val transportType: TransportType = TransportType.WALK,
     var endedAtMillis: Long? = null,
     val locationPoints: MutableList<LocationPoint> = mutableListOf(),
     val segments: MutableList<RouteSegment> = mutableListOf(),

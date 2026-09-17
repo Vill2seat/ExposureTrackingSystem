@@ -1,4 +1,4 @@
-#Thu Sep 17 13:15:45 UTC 2026
+#Thu Sep 17 13:55:06 UTC 2026
 base.0=/workspaces/ExposureTrackingSystem/android/app/build/intermediates/dex/debug/mergeExtDexDebug/classes.dex
 base.1=/workspaces/ExposureTrackingSystem/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
 base.2=/workspaces/ExposureTrackingSystem/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/12/classes.dex
@@ -7,6 +7,7 @@ base.4=/workspaces/ExposureTrackingSystem/android/app/build/intermediates/dex/de
 base.5=/workspaces/ExposureTrackingSystem/android/app/build/intermediates/global_synthetics_dex/debug/mergeDebugGlobalSynthetics/classes.dex
 base.6=/workspaces/ExposureTrackingSystem/android/app/build/intermediates/dex/debug/mergeExtDexDebug/classes2.dex
 base.7=/workspaces/ExposureTrackingSystem/android/app/build/intermediates/dex/debug/mergeExtDexDebug/classes3.dex
+base.8=/workspaces/ExposureTrackingSystem/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/10/classes.dex
 path.0=classes.dex
 path.1=0/classes.dex
 path.2=12/classes.dex
@@ -15,6 +16,7 @@ path.4=5/classes.dex
 path.5=classes.dex
 path.6=classes2.dex
 path.7=classes3.dex
+path.8=10/classes.dex
 renamed.0=classes.dex
 renamed.1=classes2.dex
 renamed.2=classes3.dex
@@ -23,3 +25,4 @@ renamed.4=classes5.dex
 renamed.5=classes6.dex
 renamed.6=classes7.dex
 renamed.7=classes8.dex
+renamed.8=classes9.dex
