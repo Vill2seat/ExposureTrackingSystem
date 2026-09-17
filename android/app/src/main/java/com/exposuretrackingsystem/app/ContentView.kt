@@ -141,22 +141,22 @@ fun ContentView() {
                 enabled = !isTracking && !permissionRequestPending,
                 modifier = Modifier.weight(1f)
             ) {
-                Text("Start")
+                Text("Start Tracking")
             }
             Button(
                 onClick = ::stopTracking,
                 enabled = isTracking,
                 modifier = Modifier.weight(1f)
             ) {
-                Text("Stop")
+                Text("Stop Tracking")
             }
-            Spacer(modifier = Modifier.height(12.dp))
-            Button(
-                onClick = ::exportDiagnosticLog,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Export diagnostic log")
-            }
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        Button(
+            onClick = ::exportDiagnosticLog,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Export diagnostic log")
         }
     }
 }
