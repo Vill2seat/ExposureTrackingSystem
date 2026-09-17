@@ -4,12 +4,15 @@ import android.location.Location
 import com.exposuretrackingsystem.app.data.model.LocationPoint
 import com.exposuretrackingsystem.app.data.model.Route
 import com.exposuretrackingsystem.app.data.model.RouteSegment
+import com.exposuretrackingsystem.app.data.model.SensorSample
+import com.exposuretrackingsystem.app.data.model.SensorSampleType
 import com.exposuretrackingsystem.app.data.model.TransportType
 
 class RouteEngine(
     private val locationTrackingManager: LocationTrackingManager,
     private val diagnosticLogger: GpsDiagnosticLogger =
-        GpsDiagnosticLogger(locationTrackingManager.appContext)
+        GpsDiagnosticLogger(locationTrackingManager.appContext),
+    private val accelerometerSamplesProvider: () -> List<SensorSample> = { emptyList() }
 ) {
     var activeRoute: Route? = null
         private set
@@ -79,7 +82,13 @@ class RouteEngine(
         val previousValidPoint = route.locationPoints.lastOrNull()
         val distanceMeters = previousValidPoint?.let { distanceBetween(it, locationPoint) }
         val segmentSpeedKmh = previousValidPoint?.let { calculateSpeedKmh(it, locationPoint, distanceMeters) }
-        val rejectionReason = rejectionReason(locationPoint, previousValidPoint, distanceMeters, segmentSpeedKmh)
+        val rejectionReason = rejectionReason(
+            point = locationPoint,
+            previousValidPoint = previousValidPoint,
+            distanceMeters = distanceMeters,
+            segmentSpeedKmh = segmentSpeedKmh,
+            accelerometerSamples = accelerometerSamplesProvider()
+        )
 
         if (rejectionReason != null) {
             rejectedPointCount += 1
@@ -213,10 +222,15 @@ class RouteEngine(
         point: LocationPoint,
         previousValidPoint: LocationPoint?,
         distanceMeters: Double?,
-        segmentSpeedKmh: Double?
+        segmentSpeedKmh: Double?,
+        accelerometerSamples: List<SensorSample>
     ): String? {
         if (point.accuracyMeters <= 0.0 || point.accuracyMeters > MAX_ACCEPTABLE_ACCURACY_METERS) {
             return "unreliable_accuracy"
+        }
+
+        if (shouldRejectStationaryMotion(point.speedKmh, accelerometerSamples)) {
+            return "stationary_motion"
         }
 
         if (previousValidPoint == null) {
@@ -280,6 +294,46 @@ class RouteEngine(
         private const val STATIONARY_SPEED_THRESHOLD_KMH = 2.0
         private const val MAX_PLAUSIBLE_SPEED_KMH = 200.0
     }
+}
+
+internal fun isStationaryMotion(samples: List<SensorSample>): Boolean {
+    val accelerometerSamples = samples
+        .asSequence()
+        .filter { it.sensorType == SensorSampleType.ACCELEROMETER }
+        .mapNotNull { sample ->
+            val x = sample.x?.toDouble()
+            val y = sample.y?.toDouble()
+            val z = sample.z?.toDouble()
+            if (x == null || y == null || z == null) {
+                null
+            } else {
+                kotlin.math.sqrt(x * x + y * y + z * z)
+            }
+        }
+        .toList()
+
+    if (accelerometerSamples.size < MIN_STATIONARY_ACCELEROMETER_SAMPLES) {
+        return false
+    }
+
+    val recentSamples = accelerometerSamples.takeLast(MIN_STATIONARY_ACCELEROMETER_SAMPLES)
+    val magnitudeRange = recentSamples.maxOrNull()!! - recentSamples.minOrNull()!!
+    val meanMagnitude = recentSamples.average()
+
+    return magnitudeRange <= MAX_STATIONARY_ACCELERATION_RANGE_MPS2 &&
+        kotlin.math.abs(meanMagnitude - STANDARD_GRAVITY_MPS2) <= MAX_STATIONARY_GRAVITY_DEVIATION_MPS2
+}
+
+private const val MIN_STATIONARY_ACCELEROMETER_SAMPLES = 5
+private const val STANDARD_GRAVITY_MPS2 = 9.81
+private const val MAX_STATIONARY_ACCELERATION_RANGE_MPS2 = 0.25
+private const val MAX_STATIONARY_GRAVITY_DEVIATION_MPS2 = 0.30
+
+internal fun shouldRejectStationaryMotion(
+    gpsSpeedKmh: Double,
+    accelerometerSamples: List<SensorSample>
+): Boolean {
+    return gpsSpeedKmh > 2.0 && isStationaryMotion(accelerometerSamples)
 }
 
 internal fun isValidRoutePointGap(elapsedSeconds: Double): Boolean {

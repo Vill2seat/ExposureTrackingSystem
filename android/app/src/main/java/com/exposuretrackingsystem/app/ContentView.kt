@@ -38,8 +38,13 @@ import kotlinx.coroutines.delay
 fun ContentView() {
     val context = LocalContext.current
     val locationTrackingManager = remember { LocationTrackingManager(context) }
-    val routeEngine = remember { RouteEngine(locationTrackingManager) }
     val sensorDataManager = remember { SensorDataManager(context) }
+    val routeEngine = remember {
+        RouteEngine(
+            locationTrackingManager = locationTrackingManager,
+            accelerometerSamplesProvider = sensorDataManager::samplesSnapshot
+        )
+    }
     val sensorDiagnosticLogger = remember { SensorDiagnosticLogger(context) }
 
     var isTracking by remember { mutableStateOf(false) }
