@@ -3,3 +3,4 @@ mipmap ic_launcher
 mipmap ic_launcher_round
 string app_name
 style Theme_ExposureTrackingSystem
+xml file_paths

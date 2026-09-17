@@ -1,5 +1,7 @@
 package com.exposuretrackingsystem.app
 
+import android.content.Intent
+import androidx.core.content.FileProvider
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.exposuretrackingsystem.app.location.LocationTrackingManager
 import com.exposuretrackingsystem.app.location.RouteEngine
+import java.io.File
 import kotlinx.coroutines.delay
 
 @Composable
@@ -98,6 +101,21 @@ fun ContentView() {
         isTracking = false
     }
 
+    fun exportDiagnosticLog() {
+        val logFile = File(context.filesDir, "gps_diagnostic.csv")
+        val logUri = FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.fileprovider",
+            logFile
+        )
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/csv"
+            putExtra(Intent.EXTRA_STREAM, logUri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        context.startActivity(Intent.createChooser(shareIntent, "Export diagnostic log"))
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -131,6 +149,13 @@ fun ContentView() {
                 modifier = Modifier.weight(1f)
             ) {
                 Text("Stop")
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(
+                onClick = ::exportDiagnosticLog,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Export diagnostic log")
             }
         }
     }

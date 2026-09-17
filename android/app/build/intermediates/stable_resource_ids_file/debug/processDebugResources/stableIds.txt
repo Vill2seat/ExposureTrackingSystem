@@ -1404,6 +1404,7 @@ com.exposuretrackingsystem.app:id/leftToRight = 0x7f0800d8
 com.exposuretrackingsystem.app:id/left = 0x7f0800d7
 com.exposuretrackingsystem.app:id/layout = 0x7f0800d6
 com.exposuretrackingsystem.app:id/labeled = 0x7f0800d5
+com.exposuretrackingsystem.app:xml/file_paths = 0x7f120000
 com.exposuretrackingsystem.app:id/jumpToEnd = 0x7f0800d3
 com.exposuretrackingsystem.app:macro/m3_comp_radio_button_selected_pressed_state_layer_color = 0x7f0c00de
 com.exposuretrackingsystem.app:id/is_pooling_container_tag = 0x7f0800d0
