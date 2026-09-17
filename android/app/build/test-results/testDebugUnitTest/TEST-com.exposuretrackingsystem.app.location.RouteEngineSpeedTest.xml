@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-17T13:14:56.309Z" hostname="codespaces-854142" time="0.005">
+  <properties/>
+  <testcase name="calculatesWalkingSpeedFromMetersAndSeconds" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

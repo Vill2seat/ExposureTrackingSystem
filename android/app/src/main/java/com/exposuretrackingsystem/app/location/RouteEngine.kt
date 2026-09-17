@@ -133,7 +133,7 @@ class RouteEngine(
             (endPoint.timestampMillis - startPoint.timestampMillis) / MILLIS_PER_SECOND.toDouble()
         )
         val averageSpeedKmh = if (durationSeconds > 0.0) {
-            distanceMeters / durationSeconds * SECONDS_TO_HOURS
+            distanceMeters / durationSeconds * METERS_PER_SECOND_TO_KMH
         } else {
             0.0
         }
@@ -158,7 +158,7 @@ class RouteEngine(
         )
         val validDurationSeconds = route.segments.sumOf { it.durationSeconds }
         route.averageSpeedKmh = if (validDurationSeconds > 0.0) {
-            route.totalDistanceMeters / validDurationSeconds * SECONDS_TO_HOURS
+            route.totalDistanceMeters / validDurationSeconds * METERS_PER_SECOND_TO_KMH
         } else {
             0.0
         }
@@ -193,7 +193,7 @@ class RouteEngine(
             return false
         }
 
-        val computedSpeedKmh = distanceMeters / durationSeconds * SECONDS_TO_HOURS
+        val computedSpeedKmh = distanceMeters / durationSeconds * METERS_PER_SECOND_TO_KMH
         if (computedSpeedKmh > MAX_PLAUSIBLE_SPEED_KMH) {
             return false
         }
@@ -251,11 +251,7 @@ class RouteEngine(
     ): Double? {
         val elapsedMillis = second.timestampMillis - first.timestampMillis
         val durationSeconds = elapsedMillis.toDouble() / MILLIS_PER_SECOND.toDouble()
-        return if (distanceMeters != null && durationSeconds > 0.0) {
-            distanceMeters / durationSeconds * SECONDS_TO_HOURS
-        } else {
-            null
-        }
+        return distanceMeters?.let { calculateSpeedKmh(it, durationSeconds) }
     }
 
     private fun distanceBetween(first: LocationPoint, second: LocationPoint): Double {
@@ -272,11 +268,19 @@ class RouteEngine(
 
     companion object {
         private const val MILLIS_PER_SECOND = 1_000L
-        private const val SECONDS_TO_HOURS = 3_600.0
+        private const val METERS_PER_SECOND_TO_KMH = 3.6
         private const val MAX_ACCEPTABLE_ACCURACY_METERS = 50.0
         private const val MIN_MEANINGFUL_DISTANCE_METERS = 3.0
         private const val MAX_STATIONARY_DRIFT_DISTANCE_METERS = 20.0
         private const val STATIONARY_SPEED_THRESHOLD_KMH = 2.0
         private const val MAX_PLAUSIBLE_SPEED_KMH = 200.0
+    }
+}
+
+internal fun calculateSpeedKmh(distanceMeters: Double, durationSeconds: Double): Double? {
+    return if (durationSeconds > 0.0) {
+        distanceMeters / durationSeconds * 3.6
+    } else {
+        null
     }
 }
