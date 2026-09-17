@@ -17,7 +17,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 
 class LocationTrackingManager(context: Context) {
-    private val appContext = context.applicationContext
+    internal val appContext = context.applicationContext
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(appContext)
 
