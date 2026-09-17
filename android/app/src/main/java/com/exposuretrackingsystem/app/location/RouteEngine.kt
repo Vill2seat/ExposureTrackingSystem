@@ -249,8 +249,8 @@ class RouteEngine(
         second: LocationPoint,
         distanceMeters: Double?
     ): Double? {
-        val durationSeconds =
-            (second.timestampMillis - first.timestampMillis) / MILLIS_PER_SECOND.toDouble()
+        val elapsedMillis = second.timestampMillis - first.timestampMillis
+        val durationSeconds = elapsedMillis.toDouble() / MILLIS_PER_SECOND.toDouble()
         return if (distanceMeters != null && durationSeconds > 0.0) {
             distanceMeters / durationSeconds * SECONDS_TO_HOURS
         } else {
