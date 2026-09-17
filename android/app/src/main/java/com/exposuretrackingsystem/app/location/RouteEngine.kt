@@ -182,7 +182,7 @@ class RouteEngine(
 
         val durationSeconds =
             (endPoint.timestampMillis - startPoint.timestampMillis) / MILLIS_PER_SECOND.toDouble()
-        if (durationSeconds <= 0.0) {
+        if (!isValidRoutePointGap(durationSeconds)) {
             return false
         }
 
@@ -273,12 +273,18 @@ class RouteEngine(
     companion object {
         private const val MILLIS_PER_SECOND = 1_000L
         private const val METERS_PER_SECOND_TO_KMH = 3.6
+        internal const val MAX_ROUTE_POINT_GAP_SECONDS = 60.0
         private const val MAX_ACCEPTABLE_ACCURACY_METERS = 50.0
         private const val MIN_MEANINGFUL_DISTANCE_METERS = 3.0
         private const val MAX_STATIONARY_DRIFT_DISTANCE_METERS = 20.0
         private const val STATIONARY_SPEED_THRESHOLD_KMH = 2.0
         private const val MAX_PLAUSIBLE_SPEED_KMH = 200.0
     }
+}
+
+internal fun isValidRoutePointGap(elapsedSeconds: Double): Boolean {
+    return elapsedSeconds > 0.0 &&
+        elapsedSeconds <= RouteEngine.MAX_ROUTE_POINT_GAP_SECONDS
 }
 
 internal fun calculateSpeedKmh(distanceMeters: Double, durationSeconds: Double): Double? {
