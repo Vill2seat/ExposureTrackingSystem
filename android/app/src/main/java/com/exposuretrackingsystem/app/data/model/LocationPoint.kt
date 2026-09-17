@@ -5,7 +5,7 @@ package com.exposuretrackingsystem.app.data.model
  * Distances and measurements use the units defined by the technical specification.
  */
 data class LocationPoint(
-    val id: Long = 0L,
+    val id: Long = ModelIdGenerator.next(),
     val routeId: Long? = null,
     val timestampMillis: Long,
     val latitude: Double,

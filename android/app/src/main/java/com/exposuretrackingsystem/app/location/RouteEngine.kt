@@ -16,6 +16,9 @@ class RouteEngine(
 
     init {
         locationTrackingManager.onLocationPoint = ::handleLocationPoint
+        locationTrackingManager.onLocationError = {
+            activeRoute = null
+        }
     }
 
     fun startTracking(): Boolean {
@@ -45,18 +48,37 @@ class RouteEngine(
         return route
     }
 
+    fun dispose() {
+        locationTrackingManager.stopLocationUpdates()
+        locationTrackingManager.clearLocationPointListener()
+        activeRoute = null
+    }
+
     private fun handleLocationPoint(locationPoint: LocationPoint) {
         val route = activeRoute ?: return
-        val previousPoint = route.locationPoints.lastOrNull()
+        val routePoint = locationPoint.copy(routeId = route.id)
+        route.locationPoints += routePoint
+        route.locationPoints.sortBy { it.timestampMillis }
+        rebuildSegmentsAndMetrics(route)
+    }
 
-        if (previousPoint != null) {
-            val segment = createSegment(route, previousPoint, locationPoint)
+    private fun rebuildSegmentsAndMetrics(route: Route) {
+        route.segments.clear()
+        route.totalDistanceMeters = 0.0
+
+        for (index in 1 until route.locationPoints.size) {
+            val segment = createSegment(
+                route,
+                route.locationPoints[index - 1],
+                route.locationPoints[index]
+            )
             route.segments += segment
             route.totalDistanceMeters += segment.distanceMeters
         }
 
-        route.locationPoints += locationPoint
-        updateDurationAndAverageSpeed(route, locationPoint.timestampMillis)
+        val lastTimestamp = route.locationPoints.lastOrNull()?.timestampMillis
+            ?: route.startedAtMillis
+        updateDurationAndAverageSpeed(route, lastTimestamp)
     }
 
     private fun createSegment(
@@ -66,10 +88,10 @@ class RouteEngine(
     ): RouteSegment {
         val distanceMeters = distanceBetween(startPoint, endPoint)
         val durationSeconds = maxOf(
-            0L,
-            (endPoint.timestampMillis - startPoint.timestampMillis) / MILLIS_PER_SECOND
+            0.0,
+            (endPoint.timestampMillis - startPoint.timestampMillis) / MILLIS_PER_SECOND.toDouble()
         )
-        val averageSpeedKmh = if (durationSeconds > 0L) {
+        val averageSpeedKmh = if (durationSeconds > 0.0) {
             distanceMeters / durationSeconds * SECONDS_TO_HOURS
         } else {
             0.0
@@ -90,10 +112,10 @@ class RouteEngine(
 
     private fun updateDurationAndAverageSpeed(route: Route, endTimeMillis: Long) {
         route.totalDurationSeconds = maxOf(
-            0L,
-            (endTimeMillis - route.startedAtMillis) / MILLIS_PER_SECOND
+            0.0,
+            (endTimeMillis - route.startedAtMillis) / MILLIS_PER_SECOND.toDouble()
         )
-        route.averageSpeedKmh = if (route.totalDurationSeconds > 0L) {
+        route.averageSpeedKmh = if (route.totalDurationSeconds > 0.0) {
             route.totalDistanceMeters / route.totalDurationSeconds * SECONDS_TO_HOURS
         } else {
             0.0

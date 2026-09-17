@@ -1,7 +1,7 @@
 package com.exposuretrackingsystem.app.data.model
 
 data class Activity(
-    val id: Long = 0L,
+    val id: Long = ModelIdGenerator.next(),
     val routeSegmentId: Long? = null,
     val activityLevel: ActivityLevel,
     val transportType: TransportType,

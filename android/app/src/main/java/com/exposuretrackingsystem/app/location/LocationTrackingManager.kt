@@ -90,6 +90,11 @@ class LocationTrackingManager(context: Context) {
         locationCallback = null
     }
 
+    fun clearLocationPointListener() {
+        onLocationPoint = null
+        onLocationError = null
+    }
+
     private fun Location.toLocationPoint(): LocationPoint {
         return LocationPoint(
             timestampMillis = time,
