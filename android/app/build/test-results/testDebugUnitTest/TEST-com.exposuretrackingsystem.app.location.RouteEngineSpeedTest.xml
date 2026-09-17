@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-17T13:54:34.302Z" hostname="codespaces-854142" time="0.013">
+<testsuite name="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-09-17T15:32:09.665Z" hostname="codespaces-854142" time="0.024">
   <properties/>
-  <testcase name="calculatesWalkingSpeedFromMetersAndSeconds" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.013"/>
+  <testcase name="calculatesWalkingSpeedFromMetersAndSeconds" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.011"/>
+  <testcase name="acceptsFiveSecondRoutePointGap" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.0"/>
+  <testcase name="rejectsSixtyOneSecondRoutePointGap" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.0"/>
+  <testcase name="pointAfterLongGapCanStartNextValidSegment" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.0"/>
+  <testcase name="rejectsFourMinuteRoutePointGap" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.0"/>
+  <testcase name="acceptsExactlySixtySecondRoutePointGap" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
