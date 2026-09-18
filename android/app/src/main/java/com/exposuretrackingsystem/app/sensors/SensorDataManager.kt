@@ -68,6 +68,27 @@ class SensorDataManager(context: Context) : SensorEventListener {
         samples.toList()
     }
 
+    fun samplesSnapshot(
+        startTimestampMillis: Long,
+        endTimestampMillis: Long
+    ): List<SensorSample> = synchronized(samples) {
+        samples.filter { sample ->
+            sample.timestampMillis in startTimestampMillis..endTimestampMillis
+        }
+    }
+
+    fun sampleCountsSnapshot(
+        startTimestampMillis: Long,
+        endTimestampMillis: Long
+    ): Map<SensorSampleType, Int> = synchronized(samples) {
+        SensorSampleType.values().associateWith { sampleType ->
+            samples.count {
+                it.sensorType == sampleType &&
+                    it.timestampMillis in startTimestampMillis..endTimestampMillis
+            }
+        }
+    }
+
     override fun onSensorChanged(event: SensorEvent) {
         val sample = when (event.sensor.type) {
             Sensor.TYPE_ACCELEROMETER -> SensorSample(

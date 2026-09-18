@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-09-18T06:18:56.487Z" hostname="codespaces-854142" time="0.04">
+<testsuite name="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-09-18T07:25:43.593Z" hostname="codespaces-854142" time="0.008">
   <properties/>
-  <testcase name="doesNotRejectGenuineMovementSignal" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.023"/>
-  <testcase name="calculatesWalkingSpeedFromMetersAndSeconds" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.0"/>
+  <testcase name="doesNotRejectGenuineMovementSignal" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.004"/>
+  <testcase name="calculatesWalkingSpeedFromMetersAndSeconds" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.001"/>
   <testcase name="acceptsFiveSecondRoutePointGap" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.0"/>
-  <testcase name="rejectsSixtyOneSecondRoutePointGap" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.0"/>
+  <testcase name="rejectsSixtyOneSecondRoutePointGap" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.001"/>
   <testcase name="pointAfterLongGapCanStartNextValidSegment" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.0"/>
-  <testcase name="rejectsStationaryMotionWithFalseGpsSpeed" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.004"/>
-  <testcase name="preservesGpsBehaviorWithoutAccelerometerData" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.003"/>
-  <testcase name="rejectsFourMinuteRoutePointGap" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.001"/>
-  <testcase name="acceptsExactlySixtySecondRoutePointGap" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.001"/>
+  <testcase name="rejectsStationaryMotionWithFalseGpsSpeed" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.0"/>
+  <testcase name="preservesGpsBehaviorWithoutAccelerometerData" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.001"/>
+  <testcase name="rejectsFourMinuteRoutePointGap" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.0"/>
+  <testcase name="acceptsExactlySixtySecondRoutePointGap" classname="com.exposuretrackingsystem.app.location.RouteEngineSpeedTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

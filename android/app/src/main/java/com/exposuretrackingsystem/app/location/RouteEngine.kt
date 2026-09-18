@@ -1,5 +1,7 @@
 package com.exposuretrackingsystem.app.location
 
+import android.util.Log
+import com.exposuretrackingsystem.app.data.local.RoomRouteRepository
 import android.location.Location
 import com.exposuretrackingsystem.app.data.model.LocationPoint
 import com.exposuretrackingsystem.app.data.model.Route
@@ -7,12 +9,17 @@ import com.exposuretrackingsystem.app.data.model.RouteSegment
 import com.exposuretrackingsystem.app.data.model.SensorSample
 import com.exposuretrackingsystem.app.data.model.SensorSampleType
 import com.exposuretrackingsystem.app.data.model.TransportType
+import com.exposuretrackingsystem.app.data.local.RouteRepository
 
 class RouteEngine(
     private val locationTrackingManager: LocationTrackingManager,
     private val diagnosticLogger: GpsDiagnosticLogger =
         GpsDiagnosticLogger(locationTrackingManager.appContext),
-    private val accelerometerSamplesProvider: () -> List<SensorSample> = { emptyList() }
+    private val accelerometerSamplesProvider: () -> List<SensorSample> = { emptyList() },
+    private val routeRepository: RouteRepository? =
+        RoomRouteRepository.create(locationTrackingManager.appContext) { exception ->
+            Log.e(TAG, "Failed to persist completed Route", exception)
+        }
 ) {
     var activeRoute: Route? = null
         private set
@@ -68,6 +75,7 @@ class RouteEngine(
         )
         activeRoute = null
         lastCompletedRoute = route
+        routeRepository?.saveCompletedRoute(route)
         return route
     }
 
@@ -285,6 +293,7 @@ class RouteEngine(
     }
 
     companion object {
+        private const val TAG = "RouteEngine"
         private const val MILLIS_PER_SECOND = 1_000L
         private const val METERS_PER_SECOND_TO_KMH = 3.6
         internal const val MAX_ROUTE_POINT_GAP_SECONDS = 60.0

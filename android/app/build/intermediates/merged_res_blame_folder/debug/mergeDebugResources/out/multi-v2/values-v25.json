@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.exposuretrackingsystem.app-mergeDebugResources-64:/values-v25/values-v25.xml",
+            "outputFile": "com.exposuretrackingsystem.app-mergeDebugResources-68:/values-v25/values-v25.xml",
             "map": [
                 {
-                    "source": "/home/codespace/.gradle/caches/9.1.0/transforms/0f89efd39fb5348825d737ad77efcc54/transformed/appcompat-1.6.1/res/values-v25/values-v25.xml",
+                    "source": "/home/codespace/.gradle/caches/9.1.0/transforms/519787de66bffed347b96fcccd6dd8cb/transformed/appcompat-1.6.1/res/values-v25/values-v25.xml",
                     "from": {
                         "startLines": "2,3,4,6",
                         "startColumns": "4,4,4,4",

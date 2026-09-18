@@ -29,6 +29,7 @@ import com.exposuretrackingsystem.app.data.model.SensorSampleType
 import com.exposuretrackingsystem.app.data.model.TransportType
 import com.exposuretrackingsystem.app.location.LocationTrackingManager
 import com.exposuretrackingsystem.app.location.RouteEngine
+import com.exposuretrackingsystem.app.data.local.RoomRouteRepository
 import com.exposuretrackingsystem.app.sensors.SensorDataManager
 import com.exposuretrackingsystem.app.sensors.SensorDiagnosticLogger
 import java.io.File
@@ -39,10 +40,12 @@ fun ContentView() {
     val context = LocalContext.current
     val locationTrackingManager = remember { LocationTrackingManager(context) }
     val sensorDataManager = remember { SensorDataManager(context) }
+    val routeRepository = remember { RoomRouteRepository.create(context) }
     val routeEngine = remember {
         RouteEngine(
             locationTrackingManager = locationTrackingManager,
-            accelerometerSamplesProvider = sensorDataManager::samplesSnapshot
+            accelerometerSamplesProvider = sensorDataManager::samplesSnapshot,
+            routeRepository = routeRepository
         )
     }
     val sensorDiagnosticLogger = remember { SensorDiagnosticLogger(context) }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.exposuretrackingsystem.app.data.analysis.ObservationWindowTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-09-18T07:25:43.411Z" hostname="codespaces-854142" time="0.075">
+  <properties/>
+  <testcase name="copiesAvailableSensorTypesAtConstruction" classname="com.exposuretrackingsystem.app.data.analysis.ObservationWindowTest" time="0.039"/>
+  <testcase name="emptyWindowHasNoDataOrAccuracyStatistics" classname="com.exposuretrackingsystem.app.data.analysis.ObservationWindowTest" time="0.001"/>
+  <testcase name="includesGpsAndSensorsAtBothWindowBoundaries" classname="com.exposuretrackingsystem.app.data.analysis.ObservationWindowTest" time="0.017"/>
+  <testcase name="calculatesLargestGapFromUnsortedGpsInput" classname="com.exposuretrackingsystem.app.data.analysis.ObservationWindowTest" time="0.001"/>
+  <testcase name="onePointWindowHasNoGpsGap" classname="com.exposuretrackingsystem.app.data.analysis.ObservationWindowTest" time="0.0"/>
+  <testcase name="handlesZeroAndOneSensorSample" classname="com.exposuretrackingsystem.app.data.analysis.ObservationWindowTest" time="0.007"/>
+  <testcase name="excludesOneGpsPointOutsideEachWindowBoundary" classname="com.exposuretrackingsystem.app.data.analysis.ObservationWindowTest" time="0.0"/>
+  <testcase name="selectsOnlySegmentsBeforeAfterAndCrossingWindow" classname="com.exposuretrackingsystem.app.data.analysis.ObservationWindowTest" time="0.0"/>
+  <testcase name="reportsLargestGapAndAccuracyStatistics" classname="com.exposuretrackingsystem.app.data.analysis.ObservationWindowTest" time="0.003"/>
+  <testcase name="excludesInfiniteAccuracyValues" classname="com.exposuretrackingsystem.app.data.analysis.ObservationWindowTest" time="0.0"/>
+  <testcase name="reportsSensorAvailabilityAndCounts" classname="com.exposuretrackingsystem.app.data.analysis.ObservationWindowTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
