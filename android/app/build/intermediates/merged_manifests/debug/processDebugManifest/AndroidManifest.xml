@@ -10,6 +10,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <permission
         android:name="com.exposuretrackingsystem.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
@@ -37,6 +39,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name="com.exposuretrackingsystem.app.location.LocationTrackingService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

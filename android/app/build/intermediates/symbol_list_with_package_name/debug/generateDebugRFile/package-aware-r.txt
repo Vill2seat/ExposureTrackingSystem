@@ -2,5 +2,8 @@ com.exposuretrackingsystem.app
 mipmap ic_launcher
 mipmap ic_launcher_round
 string app_name
+string location_tracking_notification_channel
+string location_tracking_notification_text
+string location_tracking_notification_title
 style Theme_ExposureTrackingSystem
 xml file_paths
